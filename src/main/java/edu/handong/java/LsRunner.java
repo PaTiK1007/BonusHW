@@ -18,21 +18,35 @@ public class LsRunner {
 	
 	
 	private boolean help;
+	private boolean fileGiven=false;
 	private String fileNamei;
 	private String fileNames ;
-	private String fileNamet ;
 	private String fileNameq ;
 	private String fileName1 ;
+	private String dir;
 	
 	private static File locate ;
 	
 	
 	public void runLs(String[] args) throws ParseException {
+		
+		if(args.length>1) {
+			fileGiven=true;
+		}else{
+		
+			dir = System.getProperty("user.dir");
+			
+			fileNamei=dir ;
+			fileNames=dir ;
+			fileNameq=dir ;
+			fileName1=dir ;
+		
+		}
 		Options options = createOptions();
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(options, args);
 		
-		if(parseOptions(options, args)){
+		if(parseOptions(options, args,fileGiven)){
 			if (help){
 				printHelp(options);
 				return;
@@ -51,12 +65,6 @@ public class LsRunner {
 			
 			Option_s opts =new Option_s();
 			opts.runs(locate);
-			
-		}else if(cmd.hasOption("t")) {
-			locate = new File(fileNamet);
-			
-			Option_t optt =new Option_t();
-			optt.runt(locate);
 			
 		}else if(cmd.hasOption("Q")) {
 			locate = new File(fileNameq);
@@ -84,19 +92,20 @@ public class LsRunner {
 		
 }
 
-	private boolean parseOptions(Options options, String[] args) {
+	private boolean parseOptions(Options options, String[] args,boolean fileGiven) {
 		CommandLineParser parser = new DefaultParser();
 
 		try {
 
 			CommandLine cmd = parser.parse(options, args);
+			if(fileGiven){
+				fileNamei = cmd.getOptionValue("i");
+				fileNames = cmd.getOptionValue("s");
+				fileNameq = cmd.getOptionValue("Q");
+				fileName1 = cmd.getOptionValue("1");
+				help = cmd.hasOption("help");
+			}
 			
-			fileNamei = cmd.getOptionValue("i");
-			fileNames = cmd.getOptionValue("s");
-			fileNamet = cmd.getOptionValue("t");
-			fileNameq = cmd.getOptionValue("Q");
-			fileName1 = cmd.getOptionValue("1");
-			help = cmd.hasOption("help");
 
 
 		} catch (Exception e) {
@@ -112,38 +121,30 @@ public class LsRunner {
 
 		options.addOption(Option.builder("i")
 				.desc("print index of all files")
-				.hasArg()
+				.hasArg(fileGiven)
 				.argName("directory name") 
 				.build());
 		
 		options.addOption(Option.builder("s").longOpt("size")
 				.desc("print size of all files")
-				.hasArg()
+				.hasArg(fileGiven)
 				.argName("directory name") 
 				.build());
 		
-	
-		options.addOption(Option.builder("t")
-				.desc("print last modification time of all files")
-				.hasArg()    
-				.argName("directory name")
-				.build());
-		
-		
 		options.addOption(Option.builder("Q").longOpt("quote-name")
 				.desc("wrap files name with \"")
-				.hasArg()    
+				.hasArg(fileGiven)    
 				.argName("directory name")
 				.build());
 		
 		options.addOption(Option.builder("1")
 				.desc("print one file name for each lines")
-				.hasArg()    
+				.hasArg(fileGiven)    
 				.argName("directory name")
 				.build());
 		
 		options.addOption(Option.builder("help").longOpt("help")
-		        .desc("directory name")
+		        .desc("help page")
 		        .build());
 
 		return options;
