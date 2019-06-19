@@ -23,7 +23,6 @@ public class LsRunner {
 	private String fileNamet ;
 	private String fileNameq ;
 	private String fileName1 ;
-	private String moveFile = null;
 	
 	private static File locate ;
 	
@@ -40,7 +39,7 @@ public class LsRunner {
 			}
 		}
 		
-		
+		try {
 		if(cmd.hasOption("i")) {
 			locate = new File(fileNamei);
 			
@@ -71,23 +70,16 @@ public class LsRunner {
 			Option_1 opt1 =new Option_1();
 			opt1.run1(locate);
 			
-		}else if(cmd.hasOption("cd")) {
-			
-			if(args.length==2){
-	            File dir = new File(moveFile);
-	            if(dir.isDirectory()==true) {
-	                System.setProperty("user.dir", dir.getAbsolutePath());
-	            } else {
-	                System.out.println(moveFile + "is not a directory.");
-	            }
-	        }else if (args.length==1){
-	        	
-	        	File dir = new File(System.getProperty("user.home"));
-	        }
-			
 		}else {
 				printHelp(options);
 				return;
+		}
+		
+		}catch(Exception e) {
+			System.out.println("Not a proper directory. Please check again" + "\n");
+			
+			printHelp(options);
+			return;
 		}
 		
 }
@@ -104,7 +96,6 @@ public class LsRunner {
 			fileNamet = cmd.getOptionValue("t");
 			fileNameq = cmd.getOptionValue("Q");
 			fileName1 = cmd.getOptionValue("1");
-			moveFile = cmd.getOptionValue("cd");
 			help = cmd.hasOption("help");
 
 
@@ -122,43 +113,37 @@ public class LsRunner {
 		options.addOption(Option.builder("i")
 				.desc("print index of all files")
 				.hasArg()
-				.argName("file name or directory") 
+				.argName("directory name") 
 				.build());
 		
 		options.addOption(Option.builder("s").longOpt("size")
 				.desc("print size of all files")
 				.hasArg()
-				.argName("file name or directory") 
+				.argName("directory name") 
 				.build());
 		
 	
 		options.addOption(Option.builder("t")
 				.desc("print last modification time of all files")
 				.hasArg()    
-				.argName("file name or directory")
+				.argName("directory name")
 				.build());
 		
 		
 		options.addOption(Option.builder("Q").longOpt("quote-name")
 				.desc("wrap files name with \"")
 				.hasArg()    
-				.argName("file name or directory")
+				.argName("directory name")
 				.build());
 		
 		options.addOption(Option.builder("1")
 				.desc("print one file name for each lines")
 				.hasArg()    
-				.argName("file name or directory")
-				.build());
-		
-		options.addOption(Option.builder("cd")
-				.desc("print index of all files")
-				.hasArg()
-				.argName("file name or directory") 
+				.argName("directory name")
 				.build());
 		
 		options.addOption(Option.builder("help").longOpt("help")
-		        .desc("file name or directory")
+		        .desc("directory name")
 		        .build());
 
 		return options;
@@ -167,7 +152,7 @@ public class LsRunner {
 	private void printHelp(Options options) {
 		// automatically generate the help statement
 		HelpFormatter formatter = new HelpFormatter();
-		String header = "by Ha Eun Kwon";
+		String header = "\n" + "List of options";
 		String footer ="";
 		formatter.printHelp("ls Implemintation Program", header, options, footer, true);
 	}
