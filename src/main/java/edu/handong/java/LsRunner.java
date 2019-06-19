@@ -21,6 +21,7 @@ public class LsRunner {
 	private boolean fileGiven=false;
 	private String fileNamei;
 	private String fileNames ;
+	private String fileNamet ;
 	private String fileNameq ;
 	private String fileName1 ;
 	private String dir;
@@ -35,9 +36,9 @@ public class LsRunner {
 		}else{
 		
 			dir = System.getProperty("user.dir");
-			
 			fileNamei=dir ;
 			fileNames=dir ;
+			fileNamet=dir ;
 			fileNameq=dir ;
 			fileName1=dir ;
 		
@@ -65,6 +66,12 @@ public class LsRunner {
 			
 			Option_s opts =new Option_s();
 			opts.runs(locate);
+			
+		}else if(cmd.hasOption("t")) {
+			locate = new File(fileNamet);
+			
+			Option_t optt =new Option_t();
+			optt.runt(locate);
 			
 		}else if(cmd.hasOption("Q")) {
 			locate = new File(fileNameq);
@@ -101,6 +108,7 @@ public class LsRunner {
 			if(fileGiven){
 				fileNamei = cmd.getOptionValue("i");
 				fileNames = cmd.getOptionValue("s");
+				fileNamet = cmd.getOptionValue("t");
 				fileNameq = cmd.getOptionValue("Q");
 				fileName1 = cmd.getOptionValue("1");
 				help = cmd.hasOption("help");
@@ -130,6 +138,14 @@ public class LsRunner {
 				.hasArg(fileGiven)
 				.argName("directory name") 
 				.build());
+		
+	
+		options.addOption(Option.builder("t")
+				.desc("print last modification time of all files")
+				.hasArg(fileGiven)    
+				.argName("directory name")
+				.build());
+		
 		
 		options.addOption(Option.builder("Q").longOpt("quote-name")
 				.desc("wrap files name with \"")
