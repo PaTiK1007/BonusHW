@@ -16,7 +16,7 @@ public class Option_t {
 			Calendar cal = Calendar.getInstance();
 			
 			cal.setTimeInMillis(lastModDate);
-			System.out.println(cal.getTime()+ child.getName()); 
+			System.out.println(cal.getTime()+ " " + child.getName()); 
 	    }
 				
 	}
